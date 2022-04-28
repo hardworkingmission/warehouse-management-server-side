@@ -32,7 +32,7 @@ run().catch(console.dir)
 
 //Home Route
 app.get('/',(req,res)=>{
-    res.send('Welcome to Laptop Warehouse')
+    res.send('Welcome to Laptop Warehouse, Milon')
 })
 
 app.listen(port,()=>{

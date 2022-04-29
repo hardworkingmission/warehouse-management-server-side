@@ -27,6 +27,12 @@ const run= async()=>{
             const products= await laptopCollection.find({}).toArray()
             res.send(products)
         })
+        //get product by id
+        app.get('/product/:id',async(req,res)=>{
+            const productId=req.params.id
+            const result= await laptopCollection.findOne({_id:objectId(productId)})
+            res.send(result)
+        })
         //delete a product
         app.delete('/deleteProduct/:id',async(req,res)=>{
             const productId=req.params.id
@@ -34,12 +40,21 @@ const run= async()=>{
             res.send(result)
             //console.log(productId)
         })
+        //addProduct
         app.post('/addProduct',async(req,res)=>{
             const newProduct=req.body
             const result= await laptopCollection.insertOne(newProduct)
             res.send(result)
             //console.log(newProduct)
         })
+        //updateQuantity
+        app.put('/updateQuantity/:id',async(req,res)=>{
+            const productId=req.params.id
+            const updatedProduct=req.body
+            const result= await laptopCollection.updateOne({_id:objectId(productId)},{$set:{quantity:updatedProduct.quantity}})
+            res.send(result)
+        })
+
 
     }finally{
 

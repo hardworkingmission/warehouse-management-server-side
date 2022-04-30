@@ -54,6 +54,13 @@ const run= async()=>{
             const result= await laptopCollection.updateOne({_id:objectId(productId)},{$set:{quantity:updatedProduct.quantity}})
             res.send(result)
         })
+        //search by email
+        app.get('/myItems',async(req,res)=>{
+            const query=req.query.email
+            const result= await laptopCollection.find({email:query}).toArray()
+            res.send(result)
+            //console.log(query)
+        })
 
 
     }finally{

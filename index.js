@@ -56,11 +56,17 @@ const run= async()=>{
             res.send(result)
         })
         //search by email
-        app.get('/myItems',async(req,res)=>{
-            const query=req.query.email
-            const result= await laptopCollection.find({email:query}).toArray()
-            res.send(result)
-            //console.log(query)
+        app.get('/myItems',verifyToken,async(req,res)=>{
+            const email=req.query.email
+            const decodedEmail=res.decoded.email
+            if(email===decodedEmail){
+                const result= await laptopCollection.find({email:email}).toArray()
+                res.send(result)
+            }else{
+                res.status(403).send({message:'Access Forbidden'})
+            }
+           
+            console.log()
         })
 
         //jwt authentication

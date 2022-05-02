@@ -25,7 +25,16 @@ const run= async()=>{
 
         //get all products
         app.get('/products',async(req,res)=>{
-            const products= await laptopCollection.find({}).toArray()
+            const page=parseInt(req.query.page)
+            const size=parseInt(req.query.size)
+            let products
+            if(page||size){
+                products=await laptopCollection.find({}).skip(page*size).limit(size).toArray()
+
+            }else{
+                products= await laptopCollection.find({}).toArray()
+            }
+
             res.send(products)
         })
         //get product by id
@@ -54,6 +63,12 @@ const run= async()=>{
             const updatedProduct=req.body
             const result= await laptopCollection.updateOne({_id:objectId(productId)},{$set:{quantity:updatedProduct.quantity}})
             res.send(result)
+        })
+        //total products count
+        app.get('/itemCount',async(req,res)=>{
+            const itemCount= await laptopCollection.countDocuments()
+            res.send({itemCount})
+
         })
         //search by email
         app.get('/myItems',verifyToken,async(req,res)=>{

@@ -1,4 +1,5 @@
 const express= require('express')
+const jwt =require('jsonwebtoken')
 const app=express()
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const objectId=require('mongodb').ObjectId
@@ -60,6 +61,18 @@ const run= async()=>{
             const result= await laptopCollection.find({email:query}).toArray()
             res.send(result)
             //console.log(query)
+        })
+
+        //jwt authentication
+        app.post('/generateJWT',async(req,res)=>{
+            const email=req.body
+            const result= await jwt.sign(email,process.env.ACCESS_SECRET,{
+                expiresIn:'1d'
+            })
+            res.send(result)
+            console.log(email)
+
+
         })
 
 

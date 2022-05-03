@@ -74,7 +74,7 @@ const run= async()=>{
         //search by email
         app.get('/myItems',verifyToken,async(req,res)=>{
             const email=req.query.email
-            const decodedEmail=res.decoded.email
+            const decodedEmail=res.decoded?.email
             if(email===decodedEmail){
                 const result= await laptopCollection.find({email:email}).toArray()
                 res.send(result)
@@ -111,7 +111,7 @@ const run= async()=>{
         //my notes
         app.get('/mynotes',verifyToken,async(req,res)=>{
             const email=req.query.email
-            const decodedEmail=res.decoded.email
+            const decodedEmail=res.decoded?.email
             if(email===decodedEmail){
                 const result= await noteCollection.find({email:email}).toArray()
                 res.send(result)

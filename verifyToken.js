@@ -9,6 +9,7 @@ const verifyToken=(req,res,next)=>{
                 return res.status(403).send({message:'Access Forbidden'})
             }
             res.decoded=decoded
+            next()
         })
 
     }else{
@@ -16,7 +17,7 @@ const verifyToken=(req,res,next)=>{
     }
     
     //console.log(token)
-    next()
+    
 }
 
 module.exports={verifyToken}

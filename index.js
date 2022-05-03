@@ -92,9 +92,21 @@ const run= async()=>{
         })
         //get notes
         app.get('/notes',async(req,res)=>{
-            const email=req.query.email
-            const notes= await noteCollection.find({}).toArray()
+            const page=parseInt(req.query.page)
+            const size=parseInt(req.query.size)
+            let notes
+            if(page||size){
+                notes= await noteCollection.find({}).skip(page*size).limit(size).toArray()
+
+            }else{
+                notes= await noteCollection.find({}).toArray()
+            }
             res.send(notes)
+        })
+        //note count
+        app.get('/noteCount',async(req,res)=>{
+            const noteCount=await noteCollection.countDocuments()
+            res.send({noteCount})
         })
         //my notes
         app.get('/mynotes',verifyToken,async(req,res)=>{

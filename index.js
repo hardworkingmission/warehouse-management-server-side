@@ -22,6 +22,7 @@ const run= async()=>{
         await client.connect()
 
         const laptopCollection= client.db('laptop-warehouse').collection('laptops')
+        const noteCollection= client.db('laptop-warehouse').collection('notes')
 
         //get all products
         app.get('/products',async(req,res)=>{
@@ -83,7 +84,36 @@ const run= async()=>{
            
             console.log()
         })
+        //create note
+        app.post('/createnote',async(req,res)=>{
+            const note=req.body
+            const result= await noteCollection.insertOne(note)
+            res.send(result)
+        })
+        //get notes
+        app.get('/notes',async(req,res)=>{
+            const email=req.query.email
+            const notes= await noteCollection.find({}).toArray()
+            res.send(notes)
+        })
+        //my notes
+        app.get('/mynotes',verifyToken,async(req,res)=>{
+            const email=req.query.email
+            const decodedEmail=res.decoded.email
+            if(email===decodedEmail){
+                const result= await noteCollection.find({email:email}).toArray()
+                res.send(result)
+            }else{
+                res.status(403).send({message:'Access Forbidden'})
+            }
+        })
+        //delete a note 
+        app.delete('/deleteNote/:id',async(req,res)=>{
+            const noteId=req.params.id
+            const result= await noteCollection.deleteOne({_id:objectId(noteId)})
+            res.send(result)
 
+        })
         //jwt authentication
         app.post('/generateJWT',async(req,res)=>{
             const email=req.body
@@ -95,6 +125,7 @@ const run= async()=>{
 
 
         })
+
 
 
     }finally{
